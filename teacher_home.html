@@ -115,20 +115,18 @@
 
 
                     <v-card-actions>
-                        <v-btn @click="google_login()" v-if="!user"> Login</v-btn>
+                        <v-btn @click="google_login()" v-if="!user">Login</v-btn>
                         <div v-if="user">
-                            <v-btn @click="google_logout()" v-if="user"> Logout</v-btn>
-                            <div v-for="(s) in students">
-                                <v-btn v-if="user.email == s.email"><a href="students_home.html">Next for
-                                        students</a></v-btn>
+                            <v-btn @click="google_logout()" v-if="user">Logout</v-btn>
+                            <div v-for="(s, index) in students" :key="index">
+                                <v-btn v-if="user.email == s.email" to="students_home.html"></v-btn>
                             </div>
-                            <div v-for="(t) in teachers">
-                                <v-btn v-if="user.email == t.email"><a href="teachers_home.html">Next for
-                                        Teachers</a></v-btn>
+                            <div v-for="(t, index) in teachers" :key="index">
+                                <v-btn v-if="user.email == t.email" to="teachers_home.html"></v-btn>
                             </div>
                         </div>
-
                     </v-card-actions>
+                    
                 </v-card>
 
                 <v-card class="pa-6" v-if="editmode==='เช็คคำตอบ'">
