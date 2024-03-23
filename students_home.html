@@ -74,7 +74,7 @@
                     </v-card-actions>
 
 
-                    <v-card v-if="editmode==='แบบฟอร์ม'">
+                    <v-card v-if="editmode==='เช็คชื่อ'">
                         <v-card-text class="pa-6">
                             <v-card-title class="bg-test">{{editmode}}</v-card-title>
                             <v-text-field v-model="editcheckin.id" label="รหัส"></v-text-field>
@@ -230,7 +230,7 @@
                     this.editmode = "เพิ่มคำถาม";
                 },
                 sendob() {
-                    this.editmode = "แบบฟอร์ม";
+                    this.editmode = "เช็คชื่อ";
                     this.editcheckin = {};
                 },
                 saveqiz_back() {
