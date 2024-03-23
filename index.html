@@ -94,23 +94,6 @@
 
                     </v-card-actions>
                 </v-card>
-                <!-- <v-card v-if="editmode">
-                    <v-card-text class="pa-6">
-                        <v-card-title class="bg-blue-grey">{{editmode}}</v-card-title>
-                        <v-text-field v-model="editstd.id" label="รหัส"></v-text-field>
-                        <v-combobox v-model="editstd.title" label="คำนำหน้า"
-                            :items="['นาย','นางสาว','ด.ช.','ด.ญ','นาง']"></v-combobox>
-                        <v-text-field v-model="editstd.fname" label="ชื่อ"></v-text-field>
-                        <v-text-field v-model="editstd.lname" label="นามสกุล"></v-text-field>
-                        <v-text-field v-model="editstd.email" label="E-mail"></v-text-field>
-                        <v-text-field v-model="editstd.section" label="Section"></v-text-field>
-                    </v-card-text>
-                    <v-card-actions>
-
-                        <v-btn @click="savedata()">Save</v-btn>
-                        <v-btn @click="editmode=0">Cancel</v-btn>
-                    </v-card-actions>
-                </v-card> -->
                 <div class="pa-6 text-center">{{footer}}</div>
             </v-container>
         </v-app>
@@ -181,7 +164,6 @@
                 };
             },
 
-
             mounted() {
                 firebase.auth().onAuthStateChanged((user) => {
                     if (user) {
@@ -207,7 +189,6 @@
                         });
                         this.students = stdlist;
                     });
-
             },
 
 
