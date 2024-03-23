@@ -22,8 +22,37 @@
         .imgderja {
             padding-bottom: 2rem;
         }
+
+        .login-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
+        }
+
+        .color-btn {
+            background-color: #344767;
+            color: aliceblue;
+            margin: 2rem 2rem;
+        }
+
+        .please {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 1rem;
+        }
+
+        .bg-test {
+            background-color: #5e72e4;
+            color: aliceblue;
+        }
+
+        .color-btn {
+            background-color: #344767;
+            color: aliceblue;
+        }
     </style>
-    
+
 </head>
 
 <body>
@@ -31,7 +60,7 @@
         <v-app>
             <v-container>
                 <v-card>
-                    <v-card-title class="bg-blue-grey">{{title}}</v-card-title>
+                    <v-card-title class="bg-test">{{title}}</v-card-title>
                     <v-card-actions>
                         <template v-if="user">
                             <div class="pa-2">
@@ -44,28 +73,23 @@
                         </template>
                     </v-card-actions>
 
-                    <div class="pa-2">
-                        ยินดีต้อนรับคุณ :
-                    </div>
 
                     <v-card v-if="editmode==='แบบฟอร์ม'">
                         <v-card-text class="pa-6">
-                            <v-card-title class="bg-blue-grey">{{editmode}}</v-card-title>
+                            <v-card-title class="bg-test">{{editmode}}</v-card-title>
                             <v-text-field v-model="editcheckin.id" label="รหัส"></v-text-field>
                             <v-text-field type="datetime-local" v-model="editcheckin.class_date"
                                 label="เวลา"></v-text-field>
                             <v-text-field v-model="editcheckin.room" label="ห้อง"></v-text-field>
                             <div v-for="(q) in quiz" class="pa-2">
-                                <h2>
-                                    <h2>{{q.quiz_name}}</h2>
-                                </h2>
+                                <p>คำถาม: {{q.quiz_name}}</p>
                             </div>จงเติมคำตอบลงช่องว่าง: <v-text-field v-model="editcheckin.qiz_send"
                                 label="คำตอบ"></v-text-field>
 
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn @click="saveqiz_back()">Save</v-btn>
-                            <v-btn @click="editmode=0">Cancel</v-btn>
+                            <v-btn class="color-btn" @click="saveqiz_back()">Save</v-btn>
+                            <v-btn class="color-btn" @click="editmode=0">Cancel</v-btn>
                         </v-card-actions>
                     </v-card>
 
@@ -112,7 +136,7 @@
         const app = Vue.createApp({
             data() {
                 return {
-                    title: "Project:  เช็คชื่อจากฐานข้อมูล",
+                    title: "ระบบเช็คชื่อนักศึกษา",
                     footer: "",
                     students: [],
                     editstd: {},

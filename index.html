@@ -20,6 +20,29 @@
         .imgderja {
             padding-bottom: 2rem;
         }
+
+        .login-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+        }
+
+        .color-btn {
+            background-color: #344767;
+            color: aliceblue;
+            margin: 2rem 2rem;
+        }
+
+        .please {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 1rem;
+        }
+        .bg-test{
+            background-color: #5e72e4;
+            color: aliceblue;
+        }
     </style>
 </head>
 
@@ -28,7 +51,7 @@
         <v-app>
             <v-container>
                 <v-card>
-                    <v-card-title class="bg-blue-grey">{{title}}</v-card-title>
+                    <v-card-title class="bg-test">{{title}}</v-card-title>
                     <v-card-actions>
                         <template v-if="user">
                             <div class="pa-2">
@@ -41,116 +64,24 @@
                         </template>
                     </v-card-actions>
 
-                    <!-- <v-card-text class="pa-6">
-                    <table width="100%" >
-                        <thead>
-                          <tr>
-                            <td>รหัส</td>
-                            <td>คำนำหน้า</td>
-                            <td>ชื่อ</td>
-                            <td>สกุล</td>
-                            <td>Email</td>
-                            <td>section</td>
-                            <td>edit</td>
-                            <td>deleteData</td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="(s) in students">
-                            <td>{{s.id}}</td>
-                            <td>{{s.title}}</td>
-                            <td>{{s.fname}}</td>
-                            <td>{{s.lname}}</td>
-                            <td>{{s.email}}</td>
-                            <td>{{s.section}}</td>
-                            <td>
-                                <v-btn @click="edit(s)"><v-icon icon="mdi-account-edit"></v-icon></v-btn>
-                            </td>
-                            <td><v-btn @click="deleteData(s)"><v-icon icon="mdi-account-remove"></v-icon></v-btn></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                </v-card-text>-->
-                    <v-card-actions>
-                        <!-- <v-btn @click="readData()">Read Data (get)</v-btn>
-                    <v-btn @click="autoRead()">Auto Read (onSnapshot)</v-btn>
-                    <v-btn @click="addData()">Add Data</v-btn>-->
-                    </v-card-actions>
-
-
-                    <v-card-actions>
-                        <v-btn @click="google_login()" v-if="!user"> Login</v-btn>
+                    <v-card-actions class="login-layout">
+                        <v-btn class="color-btn" @click="google_login()" v-if="!user">Login</v-btn>
                         <div v-if="user">
-                            <v-btn @click="google_logout()" v-if="user"> Logout</v-btn>
+                            <v-btn class="color-btn" @click="google_logout()" v-if="user">Logout</v-btn>
                             <div v-for="(s) in students">
                                 <v-btn v-if="user.email == s.email"><a href="students_home.html">Next for
                                         students</a></v-btn>
                             </div>
                             <div v-for="(t) in teachers">
-                                <v-btn v-if="user.email == t.email"><a href="teacher_home.html">Next for
+                                <v-btn  v-if="user.email == t.email"><a href="teacher_home.html">Next for
                                         Teachers</a></v-btn>
                             </div>
                         </div>
-
                     </v-card-actions>
                 </v-card>
-                <!-- <v-card v-if="editmode">
-                    <v-card-text class="pa-6">
-                        <v-card-title class="bg-blue-grey">{{editmode}}</v-card-title>
-                        <v-text-field v-model="editstd.id" label="รหัส"></v-text-field>
-                        <v-combobox v-model="editstd.title" label="คำนำหน้า"
-                            :items="['นาย','นางสาว','ด.ช.','ด.ญ','นาง']"></v-combobox>
-                        <v-text-field v-model="editstd.fname" label="ชื่อ"></v-text-field>
-                        <v-text-field v-model="editstd.lname" label="นามสกุล"></v-text-field>
-                        <v-text-field v-model="editstd.email" label="E-mail"></v-text-field>
-                        <v-text-field v-model="editstd.section" label="Section"></v-text-field>
-                    </v-card-text>
-                    <v-card-actions>
-
-                        <v-btn @click="savedata()">Save</v-btn>
-                        <v-btn @click="editmode=0">Cancel</v-btn>
-                    </v-card-actions>
-                </v-card> -->
                 <div class="pa-6 text-center">{{footer}}</div>
             </v-container>
         </v-app>
-        <v-card-actions>
-            <template v-if="user">
-                <div class="pa-2">
-                    <v-avatar><img :src="user.photoURL" /></v-avatar>
-                </div>
-                <div class="pa-2">
-                    {{user.displayName}}<br />
-                    {{user.email}}<br />
-                </div>
-            </template>
-            <!--
-        <v-btn @click="google_login()"  v-if="!user">Login</v-btn>
-        <v-btn @click="google_logout()" v-if="user"> Logout</v-btn>-->
-        </v-card-actions>
-        <div>{{ustudent}}</div>
-
-        <v-card-text class="pa-6">
-            <table width="100%">
-                <thead>
-                    <tr>
-                        <td>email</td>
-                        <td>name</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(tt) in teachers">
-                        <td>{{tt.email}}</td>
-                        <td>{{tt.name}}</td>
-                        <!-- ทดสอบ if <td v-if = "t.email == ''"> <v-btn @click="readDatatc">Read Data (get)</v-btn></td>-->
-                    </tr>
-                </tbody>
-            </table>
-        </v-card-text>
-        <v-card-actions>
-            <!-- <v-btn @click="readDatatc">Read Data (get)</v-btn> -->
-        </v-card-actions>
-
     </div>
 
     <script>
@@ -170,7 +101,7 @@
         const app = Vue.createApp({
             data() {
                 return {
-                    title: "Project:  เช็คชื่อจากฐานข้อมูล",
+                    title: "ระบบเช็คชื่อนักศึกษา",
                     footer: "",
                     students: [],
                     editstd: {},
@@ -209,8 +140,6 @@
                     });
 
             },
-
-
 
             methods: {
                 /* readData() {
@@ -266,7 +195,6 @@
                     }
                 },
                 google_login() {
-                    // Using a popup.
                     var provider = new firebase.auth.GoogleAuthProvider();
                     provider.addScope("profile");
                     provider.addScope("email");
@@ -292,12 +220,8 @@
                         );
                 },
 
-
-
-
             },
         });
-
 
         app.use(vuetify).mount("#app");
     </script>
