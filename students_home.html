@@ -74,17 +74,20 @@
                     </v-card-actions>
 
 
-                    <v-card v-if="editmode==='แบบฟอร์ม'">
+                    <v-card v-if="editmode==='เช็คชื่อ'">
                         <v-card-text class="pa-6">
-                            <v-card-title class="bg-test">{{editmode}}</v-card-title>
-                            <v-text-field v-model="editcheckin.id" label="รหัส"></v-text-field>
-                            <v-text-field type="datetime-local" v-model="editcheckin.class_date"
-                                label="เวลา"></v-text-field>
+                            <v-card-title class="bg-test">{{editmode}}</v-card-title><br><br>
+                            <p>รหัสนักศึกษา</p>
+                            <v-text-field :value="getStudentIdByEmail(user ? user.email : '')" outlined readonly></v-text-field>
+
+                            <p>เวลาการเข้าเรียน</p>
+                            <v-text-field :value="currentTime" v-model="time" outlined readonly></v-text-field>
                             <v-text-field v-model="editcheckin.room" label="ห้อง"></v-text-field>
-                            <div v-for="(q) in quiz" class="pa-2">
+
+                            <div v-for="(q, index) in quiz" :key="index" class="pa-2">
                                 <p>คำถาม: {{q.quiz_name}}</p>
-                            </div>จงเติมคำตอบลงช่องว่าง: <v-text-field v-model="editcheckin.qiz_send"
-                                label="คำตอบ"></v-text-field>
+                                <v-text-field v-model="q.qiz_send" label="คำตอบ"></v-text-field>
+                            </div>
 
                         </v-card-text>
                         <v-card-actions>
@@ -98,6 +101,7 @@
                         <!--<v-btn @click="readData()">Read Data (get)</v-btn>
                         <v-btn @click="autoRead()">Auto Read (onSnapshot)</v-btn>-->
                         <v-btn @click="sendob()">คลิกเพื่อเช็คชื่อ</v-btn>
+
                     </v-card-actions>
 
 
@@ -146,6 +150,8 @@
                     teachers: [],
                     user: null,
                     ustudent: null,
+                    currentTime: '',
+                    searchEmail: '',
                 };
             },
 
@@ -185,7 +191,10 @@
                         this.quiz = quizlist;
                     });
 
-
+                this.updateTime();
+                setInterval(() => {
+                    this.updateTime();
+                }, 60000); // 60000 มีค่าเท่ากับ 1 นาที
             },
 
 
@@ -229,7 +238,7 @@
                     this.editmode = "เพิ่มคำถาม";
                 },
                 sendob() {
-                    this.editmode = "แบบฟอร์ม";
+                    this.editmode = "เช็คชื่อ";
                     this.editcheckin = {};
                 },
                 saveqiz_back() {
@@ -272,10 +281,28 @@
                         );
                 },
 
+                updateTime() {
+                    // สร้างวัตถุ Date เพื่อเข้าถึงเวลาปัจจุบัน
+                    const now = new Date();
 
+                    // กำหนดรูปแบบของเวลาที่ต้องการแสดง เช่น HH:mm:ss
+                    const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
+
+                    // อัพเดทค่า currentTime ให้เป็นเวลาปัจจุบัน
+                    this.currentTime = timeString;
+
+
+                }, getStudentIdByEmail(email) {
+                    // ค้นหาข้อมูลของนักศึกษาที่มีอีเมลตามที่ระบุ
+                    const student = this.students.find(student => student.email === email);
+
+                    // ถ้าพบข้อมูลของนักศึกษา ให้คืนค่ารหัสนักศึกษา ไม่พบให้คืนค่า 'No student data available'
+                    return student ? student.id : 'No student data available';
+                },
 
 
             },
+
         });
 
 

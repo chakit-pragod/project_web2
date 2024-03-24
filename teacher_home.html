@@ -46,6 +46,7 @@
             background-color: #5e72e4;
             color: aliceblue;
         }
+
         .color-btn {
             background-color: #344767;
             color: aliceblue;
@@ -113,20 +114,23 @@
                     </v-card-actions>
 
 
-
                     <v-card-actions>
-                        <v-btn @click="google_login()" v-if="!user">Login</v-btn>
+                        <v-btn @click="google_login()" v-if="!user"> Login</v-btn>
                         <div v-if="user">
-                            <v-btn @click="google_logout()" v-if="user">Logout</v-btn>
-                            <div v-for="(s, index) in students" :key="index">
-                                <v-btn v-if="user.email == s.email" to="students_home.html"></v-btn>
+                            <v-btn @click="google_logout()" v-if="user"> Logout</v-btn>
+                            <div v-for="(s) in students">
+                                <v-btn v-if="user.email == s.email"><a href="students_home.html">Next for
+                                        students</a></v-btn>
                             </div>
-                            <div v-for="(t, index) in teachers" :key="index">
-                                <v-btn v-if="user.email == t.email" to="teachers_home.html"></v-btn>
+                            <div v-for="(t) in teachers">
+                                <v-btn v-if="user.email == t.email"><a href="teacher_home.html">Next for
+                                        Teachers</a></v-btn>
                             </div>
                         </div>
+
                     </v-card-actions>
-                    
+
+
                 </v-card>
 
                 <v-card class="pa-6" v-if="editmode==='เช็คคำตอบ'">
@@ -160,7 +164,7 @@
                     <table width="100%">
                         <thead>
                             <tr>
-                                <td>ผู้โพสต์</td>
+                                <td></td>
                                 <td>หัวข้อ</td>
                                 <td>แก้ไข</td>
                                 <td>ลบ</td>
@@ -184,7 +188,7 @@
                 </v-card>
 
                 <!--แก้ไขข้อมูล - เพิ่มข้อมูล -->
-                <v-card  v-if="editmode==='เพิ่มนักเรียน'">
+                <v-card v-if="editmode==='เพิ่มนักเรียน'">
                     <v-card-text class="pa-6">
                         <v-card-title class="bg-test">{{editmode}}</v-card-title>
                         <v-text-field v-model="editstd.id" label="รหัส"></v-text-field>
@@ -247,17 +251,32 @@
                     teachers: [],
                     user: null,
                     ustudent: null,
-                    checkin: [],
+                    checkin: [], submittedData: [], // Store submitted data for display
+                    tableHeaders: [
+                        { text: 'Student ID', value: 'studentId' },
+                        { text: 'Time', value: 'time' },
+                        { text: 'Room', value: 'room' },
+                        { text: 'Quiz Answers', value: 'quizAnswers' }
+                    ]
                 };
+            },
+            created() {
+                // Fetch current user data (assuming you have a method to do this)
+                this.fetchCurrentUser();
             },
 
 
             mounted() {
+                this.fetchData();
+
                 firebase.auth().onAuthStateChanged((user) => {
                     if (user) {
                         this.user = user.toJSON();
+                        this.fetchData();
                     } else {
                         this.user = null;
+                        this.students = [];
+                        this.quiz = [];
                     }
                 });
                 db.collection("teachers").get()
@@ -300,6 +319,27 @@
 
 
             methods: {
+                fetchData() {
+                    db.collection("students").get()
+                        .then((querySnapshot) => {
+                            var stdlist = [];
+                            querySnapshot.forEach((doc) => {
+                                stdlist.push({ id: doc.id, ...doc.data() });
+                            });
+                            this.students = stdlist;
+                        });
+
+                    db.collection("quiz").get()
+                        .then((querySnapshot) => {
+                            var quizlist = [];
+                            querySnapshot.forEach((doc) => {
+                                quizlist.push({ id: doc.id, ...doc.data() });
+                            });
+                            this.quiz = quizlist;
+                        });
+
+                    // Fetch other data if needed
+                },
                 computed: {
                     filteredList() {
                         return this.quiz.filter(post => {
@@ -372,8 +412,14 @@
                 },
                 google_logout() {
                     if (confirm("Are you sure?")) {
-                        firebase.auth().signOut();
-                        location.reload();
+                        firebase.auth().signOut()
+                            .then(() => {
+                                this.user = null; // Reset user data
+                                location.reload(); // Optionally reload the page
+                            })
+                            .catch((error) => {
+                                console.error('Sign out error:', error);
+                            });
                     }
                 },
                 getstudent(email) {
@@ -389,7 +435,34 @@
                             }
                         );
                 },
+                fetchCurrentUser() {
+                    // Fetch current user data (you need to implement this method)
+                },
+                getStudentIdByEmail(email) {
+                    // Logic to get student ID by email (you need to implement this method)
+                }, submitData() {
+                    const dataToSubmit = {
+                        studentId: this.getStudentIdByEmail(this.user ? this.user.email : ''),
+                        time: this.currentTime,
+                        room: this.editcheckin.room,
+                        quizAnswers: this.quiz.map(q => q.qiz_send)
+                    };
 
+                    firebase.database().ref('checkin').push(dataToSubmit)
+                        .then(() => {
+                            console.log('Data submitted successfully');
+                            // Clear form fields after successful submission
+                            this.editcheckin.room = '';
+                            this.quiz.forEach(q => q.qiz_send = '');
+
+                            // Optionally, update submittedData to reflect the submitted entry
+                            this.submittedData.push(dataToSubmit);
+                        })
+                        .catch(error => {
+                            console.error('Error submitting data:', error);
+                        });
+
+                }
             },
         });
 
